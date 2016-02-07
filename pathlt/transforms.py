@@ -17,7 +17,7 @@ def parentdir_expand(path):
   if path[0:2] != '..':
     return path
   else:
-    parentdir_match = r'\.\.(\d*){}(.*)'.format(os.path.sep)
+    parentdir_match = r'\.\.(\d*){0}(.*)'.format(os.path.sep)
     matches = re.match(parentdir_match, path)
     expand_depth = matches.group(1) or 1
     extra_path = matches.group(2)
