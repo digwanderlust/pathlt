@@ -9,7 +9,7 @@ config = {
     'url': 'https://github.com/digwanderlust/pathlt',
     'author_email': 'digwanderlust@gmail.com',
     'version': '0.1',
-    'install_requires': ['nose'],
+    'install_requires': ['nose', 'coverage'],
     'packages': ['NAME'],
     'scripts': [],
     'name': 'pathlt'
