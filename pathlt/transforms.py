@@ -27,7 +27,8 @@ def parentdir_expand(path):
         parent_path = os.path.join(*['..'] * int(expand_depth))
         return os.path.join(parent_path, extra_path)
 
-def physical_path(path,transform_callback=None):
+
+def physical_path(path, transform_callback=None):
     """ Return the physical path if path ends with //
 
     :param path: str

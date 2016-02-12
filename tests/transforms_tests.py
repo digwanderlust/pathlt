@@ -17,18 +17,22 @@ def test_expand_parents():
     output = pathlt.transforms.parentdir_expand(input)
     assert output == '../../test'
 
+
 def test_physical_path_negative():
     input = 'test/test/'
     output = pathlt.transforms.physical_path(input)
     assert input == output
+
 
 def test_physical_path_escaped_slash():
     input = r'test/test\//'
     output = pathlt.transforms.physical_path(input)
     assert input == output
 
+
 def test_physical_path_positive():
     expected_ouput = '<physical_path>'
+
     def fake_callback(_):
         return expected_ouput
 
