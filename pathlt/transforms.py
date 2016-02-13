@@ -34,8 +34,7 @@ def physical_path(path, transform_callback=None):
     :param path: str
     :return: str
     """
-    if transform_callback is None:
-        transform_callback = os.path.realpath
+    transform_callback = transform_callback or os.path.realpath
 
     if re.match(r'.*(?<!\\)//', path):
         return transform_callback(path)
