@@ -10,7 +10,7 @@ config = {
     'author_email': 'digwanderlust@gmail.com',
     'version': '0.1',
     'install_requires': ['nose', 'coverage', 'python-coveralls'],
-    'packages': ['NAME'],
+    'packages': ['pathlt'],
     'scripts': [],
     'name': 'pathlt'
 }
