@@ -1,3 +1,7 @@
 .idea/
 *.pyc
 .coverage
+.tox/
+pathlt.egg-info/
+build/
+dist/
