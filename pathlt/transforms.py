@@ -45,7 +45,9 @@ def physical_path(path, transform_callback=None):
 
 def __disambiguate_path(root, path):
     root = root or os.getcwd()
-    candidates = [f for f in os.listdir(root) if fnmatch.fnmatch(f, '{}*'.format(path))]
+    candidates = [f
+                  for f in os.listdir(root)
+                  if fnmatch.fnmatch(f, '{}*'.format(path))]
     if len(candidates) == 1:
         return candidates[0]
     else:
