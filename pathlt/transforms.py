@@ -5,6 +5,7 @@ from __future__ import (
 
 import re
 import os
+import fnmatch
 
 
 def parentdir_expand(path):
@@ -40,3 +41,28 @@ def physical_path(path, transform_callback=None):
         return transform_callback(path)
     else:
         return path
+
+
+def __disambiguate_path(root, path):
+    root = root or os.getcwd()
+    candidates = [f for f in os.listdir(root) if fnmatch.fnmatch(f, '{}*'.format(path))]
+    if len(candidates) == 1:
+        return candidates[0]
+    else:
+        return None
+
+
+def unambiguous_path(path):
+    if os.path.exists(path):
+        return path
+    else:
+        head, tail = os.path.split(path)
+        if head:
+            root = unambiguous_path(head)
+        else:
+            root = head
+        tail = __disambiguate_path(root, tail)
+        if tail:
+            return os.path.join(root, tail)
+        else:
+            return path
