@@ -43,19 +43,55 @@ def physical_path(path, transform_callback=None):
         return path
 
 
-def __disambiguate_path(root, path):
-    root = root or os.getcwd()
-    candidates = [f
-                  for f in os.listdir(root)
-                  if fnmatch.fnmatch(f, '{}*'.format(path))]
+def __disambiguate_path(root, path, cwd_callback=None, listdir_callback=None):
+    """ Check root dir for unambiguous paths that satisfy path
+
+    For example if root contained the following files:
+
+    src
+    tests
+    test_output
+
+    s -> src
+    test -> None
+    test_ -> test_output
+
+    :param root: str
+    :param path: str
+    :param cwd_callback: function
+    :param listdir_callback: function
+    :return: str or None
+    """
+    cwd_callback = cwd_callback or os.getcwd
+    listdir_callback = listdir_callback or os.listdir
+
+    root = root or cwd_callback()
+    candidates = [
+        f
+        for f in listdir_callback(root)
+        if fnmatch.fnmatch(f, '{}*'.format(path))
+    ]
+    print(candidates)
     if len(candidates) == 1:
         return candidates[0]
     else:
         return None
 
 
-def unambiguous_path(path):
-    if os.path.exists(path):
+def unambiguous_path(path, exists_callback=None, disambiguate_callback=None):
+    """ Return a real path from an unambiguous string
+
+    Expand each portion of the path when the string unambiguously references
+    a single path.
+
+    :param path:
+    :param exists_callback: function
+    :return: str or None
+    """
+    exists_callback = exists_callback or os.path.exists
+    disambiguate_callback = disambiguate_callback or __disambiguate_path
+
+    if exists_callback(path):
         return path
     else:
         head, tail = os.path.split(path)
@@ -63,7 +99,7 @@ def unambiguous_path(path):
             root = unambiguous_path(head)
         else:
             root = head
-        tail = __disambiguate_path(root, tail)
+        tail = disambiguate_callback(root, tail)
         if tail:
             return os.path.join(root, tail)
         else:
