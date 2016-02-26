@@ -45,6 +45,7 @@ def test_physical_path_positive():
     print(output)
     assert output == expected_ouput
 
+
 def _disambiguated_check(test_case):
     tc = copy.deepcopy(test_case)
     lister = fakes.get_listdir_mock(tc['fake_dirs'])
@@ -55,8 +56,9 @@ def _disambiguated_check(test_case):
     )
     assert output == tc['expected_output']
 
+
 def test_disambiguate():
-    fake_dirs = {'foo': ['bar', 'apple','orange']}
+    fake_dirs = {'foo': ['bar', 'apple', 'orange']}
     test_cases = [
         {
             'search_root': 'foo',
@@ -80,6 +82,7 @@ def test_disambiguate():
     for test_case in test_cases:
         yield _disambiguated_check, test_case
 
+
 def _unambiguous_path_check(test_case):
     tc = copy.copy(test_case)
     output = pathlt.transforms.unambiguous_path(
@@ -89,6 +92,7 @@ def _unambiguous_path_check(test_case):
     )
     assert output == tc['expected_output']
 
+
 def _get_fake_disambiguate(unambiguous_dirs):
     """ Create a function that mocks __disambiguate
 
@@ -97,6 +101,7 @@ def _get_fake_disambiguate(unambiguous_dirs):
     :param unambiguous_dirs: list
     :return: str
     """
+
     def _inner(root, x):
         return unambiguous_dirs.get(x, x)
 
@@ -105,37 +110,29 @@ def _get_fake_disambiguate(unambiguous_dirs):
 
 def test_unambiguous_path():
     existing_paths = ['foo', 'foo/bar', 'foo/bar/baz', 'bizz']
-    transitions = {
-        'f': 'foo',
-        'b': 'bar',
-        'bad_path': None,
-    }
+    transitions = {'f': 'foo', 'b': 'bar', 'bad_path': None, }
     test_cases = [
         {
             'expected_output': 'foo/bar/baz',
             'path': 'f/bar/baz',
             'exists_callback': fakes.get_exists_mock(existing_paths),
             'disambiguate_callback': _get_fake_disambiguate(transitions),
-        },
-        {
+        }, {
             'expected_output': 'foo/bar',
             'path': 'f/b',
             'exists_callback': fakes.get_exists_mock(existing_paths),
             'disambiguate_callback': _get_fake_disambiguate(transitions),
-        },
-        {
+        }, {
             'expected_output': 'bizz',
             'path': 'bizz',
             'exists_callback': fakes.get_exists_mock(existing_paths),
             'disambiguate_callback': _get_fake_disambiguate(transitions),
-        },
-        {
+        }, {
             'expected_output': 'foo',
             'path': 'f',
             'exists_callback': fakes.get_exists_mock(existing_paths),
             'disambiguate_callback': _get_fake_disambiguate(transitions),
-        },
-        {
+        }, {
             'expected_output': 'bad_path',
             'path': 'bad_path',
             'exists_callback': fakes.get_exists_mock(existing_paths),

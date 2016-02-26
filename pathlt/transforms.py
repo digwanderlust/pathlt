@@ -101,7 +101,8 @@ def unambiguous_path(path, exists_callback=None, disambiguate_callback=None):
     else:
         head, tail = os.path.split(path)
         if head:
-            root = unambiguous_path(head, exists_callback, disambiguate_callback)
+            root = unambiguous_path(head, exists_callback,
+                                    disambiguate_callback)
         else:
             root = head
 
