@@ -6,10 +6,10 @@
 
 ## Basic usage
 
-cd `pathlt <path>`
-ls `pathlt <path>`
+`cd $(pathlt <path>)`
+`ls $(pathlt <path>)`
 
 *For example:*
 
-cd `pathlt ..5` -> cd ../../../../../
+`cd $(pathlt ..5)` -> `cd ../../../../../`
 
