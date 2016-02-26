@@ -66,12 +66,17 @@ def __disambiguate_path(root, path, cwd_callback=None, listdir_callback=None):
     listdir_callback = listdir_callback or os.listdir
 
     root = root or cwd_callback()
-    candidates = [
-        f
-        for f in listdir_callback(root)
-        if fnmatch.fnmatch(f, '{}*'.format(path))
-    ]
-    print(candidates)
+
+    try:
+        candidates = [
+            f
+            for f in listdir_callback(root)
+            if fnmatch.fnmatch(f, '{}*'.format(path))
+        ]
+    except OSError:
+        # If we have any problems with listdir return None
+        return None
+
     if len(candidates) == 1:
         return candidates[0]
     else:
@@ -96,9 +101,10 @@ def unambiguous_path(path, exists_callback=None, disambiguate_callback=None):
     else:
         head, tail = os.path.split(path)
         if head:
-            root = unambiguous_path(head)
+            root = unambiguous_path(head, exists_callback, disambiguate_callback)
         else:
             root = head
+
         tail = disambiguate_callback(root, tail)
         if tail:
             return os.path.join(root, tail)
