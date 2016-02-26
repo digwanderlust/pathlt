@@ -71,7 +71,7 @@ def __disambiguate_path(root, path, cwd_callback=None, listdir_callback=None):
         candidates = [
             f
             for f in listdir_callback(root)
-            if fnmatch.fnmatch(f, '{}*'.format(path))
+            if fnmatch.fnmatch(f, '{0}*'.format(path))
         ]
     except OSError:
         # If we have any problems with listdir return None
