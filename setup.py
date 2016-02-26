@@ -8,7 +8,7 @@ config = {
     'author': 'Matt Olsen',
     'url': 'https://github.com/digwanderlust/pathlt',
     'author_email': 'digwanderlust@gmail.com',
-    'version': '0.0.1',
+    'version': '0.2',
     'install_requires': [
         'nose',
         'coverage',
