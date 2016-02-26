@@ -39,3 +39,6 @@ def test_physical_path_positive():
     output = pathlt.transforms.physical_path('test/test//', fake_callback)
     print(output)
     assert output == expected_ouput
+
+def test_disambiguate():
+    pass
