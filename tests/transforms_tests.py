@@ -141,3 +141,6 @@ def test_unambiguous_path():
     ]
     for test_case in test_cases:
         yield _unambiguous_path_check, test_case
+
+def test_cascade():
+    assert 1 == pathlt.transforms.cascade(False, None, [], 1)

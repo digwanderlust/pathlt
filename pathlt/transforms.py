@@ -7,6 +7,11 @@ import re
 import os
 import fnmatch
 
+def cascade(*args):
+    """ Provide a functionality similar to SQL coalesce """
+    for arg in args:
+        if arg:
+            return arg
 
 def parentdir_expand(path):
     """ Expand parent directory traversal
@@ -62,10 +67,10 @@ def __disambiguate_path(root, path, cwd_callback=None, listdir_callback=None):
     :param listdir_callback: function
     :return: str or None
     """
-    cwd_callback = cwd_callback or os.getcwd
-    listdir_callback = listdir_callback or os.listdir
+    cwd_callback = cascade(cwd_callback,os.getcwd)
+    listdir_callback = cascade(listdir_callback, os.listdir)
 
-    root = root or cwd_callback()
+    root = cascade(root, cwd_callback())
 
     try:
         candidates = [
@@ -77,10 +82,7 @@ def __disambiguate_path(root, path, cwd_callback=None, listdir_callback=None):
         # If we have any problems with listdir return None
         return None
 
-    if len(candidates) == 1:
-        return candidates[0]
-    else:
-        return None
+    return candidates[0] if len(candidates) == 1 else None
 
 
 def unambiguous_path(path, exists_callback=None, disambiguate_callback=None):
@@ -93,21 +95,16 @@ def unambiguous_path(path, exists_callback=None, disambiguate_callback=None):
     :param exists_callback: function
     :return: str or None
     """
-    exists_callback = exists_callback or os.path.exists
-    disambiguate_callback = disambiguate_callback or __disambiguate_path
+    exists_callback = cascade(exists_callback, os.path.exists)
+    disambiguate_callback = cascade(disambiguate_callback, __disambiguate_path)
 
     if exists_callback(path):
         return path
-    else:
-        head, tail = os.path.split(path)
-        if head:
-            root = unambiguous_path(head, exists_callback,
-                                    disambiguate_callback)
-        else:
-            root = head
 
-        tail = disambiguate_callback(root, tail)
-        if tail:
-            return os.path.join(root, tail)
-        else:
-            return path
+    root, tail = os.path.split(path)
+    if root:
+        root = unambiguous_path(root, exists_callback, disambiguate_callback)
+
+    tail = disambiguate_callback(root, tail)
+
+    return os.path.join(root, tail) if tail else path
